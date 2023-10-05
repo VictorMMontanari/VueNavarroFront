@@ -42,6 +42,18 @@ const enviarFormulario = () => {
     });
 };
 
+//GET Aluno
+let alunos = ref([]);
+let searchTerm = ref('');
+
+axios.get('https://localhost:7127/api/aluno')
+  .then(function (alunos) {
+    console.log('Dados da resposta:', alunos.data);
+  })
+  .catch(function (error) {
+    console.error('Erro na solicitação:', error);
+  });
+
 </script>
 
 <template>
@@ -91,22 +103,23 @@ const enviarFormulario = () => {
                   <button type="submit" class="btn btn-primary">Cadastrar</button>
                 </div>
               </form>
-              <div class="modal fade" id="successModal" tabindex="-1" aria-labelledby="successModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="successModalLabel">Sucesso</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
-      </div>
-      <div class="modal-body">
-        Seu formulário foi enviado com sucesso!
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Fechar</button>
-      </div>
-    </div>
-  </div>
-</div>
+              <div class="modal fade" id="successModal" tabindex="-1" aria-labelledby="successModalLabel"
+                aria-hidden="true">
+                <div class="modal-dialog">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h5 class="modal-title" id="successModalLabel">Sucesso</h5>
+                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+                    </div>
+                    <div class="modal-body">
+                      Seu formulário foi enviado com sucesso!
+                    </div>
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Fechar</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -114,16 +127,44 @@ const enviarFormulario = () => {
           <h2 class="accordion-header">
             <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
               data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
-              Accordion Item #2
+              GET Aluno
             </button>
           </h2>
           <div id="collapseTwo" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
             <div class="accordion-body">
-              <strong>This is the second item's accordion body.</strong> It is hidden by default, until the collapse
-              plugin adds the appropriate classes that we use to style each element. These classes control the overall
-              appearance, as well as the showing and hiding via CSS transitions. You can modify any of this with custom
-              CSS or overriding our default variables. It's also worth noting that just about any HTML can go within the
-              <code>.accordion-body</code>, though the transition does limit overflow.
+              
+              <div class="input-group input-group-sm mb-3">
+                <input type="text" class="form-control" v-model="searchTerm" placeholder="Pesquisa por Id" />
+              </div>
+              
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Nome</th>
+                    <th scope="col">Sobrenome</th>
+                    <th scope="col">E-Mail</th>
+                    <th scope="col">Login</th>
+                    <th scope="col">Senha</th>
+                    <th scope="col">Data de Cadastro</th>
+                    <th scope="col">Ativo</th>
+                  </tr>
+                </thead>
+                <tbody>
+ 
+                  <tr v-for="aluno in this.alunos">
+                    <th scope="row">{{ aluno.id }}</th>
+                    <td>{{ aluno.nome }}</td>
+                    <td>Otto</td>
+                    <td>@mdo</td>
+                    <td>@mdo</td>
+                    <td>1234</td>
+                    <td>05/10/2023</td>
+                    <td>True</td>
+                  </tr>
+                </tbody>
+              </table>
+
             </div>
           </div>
         </div>
