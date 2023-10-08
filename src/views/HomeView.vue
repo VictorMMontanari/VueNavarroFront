@@ -42,7 +42,7 @@
 
                 <div class="col-md-4 col-12">
                   <div class="p-3">
-
+                    <router-link to="/matricula" class="nav-link">
                     <div class="card text-bg-success mb-3" style="max-width: 18rem;">
                       <div class="card-header">Matrícula</div>
                       <div class="card-body">
@@ -50,7 +50,7 @@
                         <p class="card-text">Clique neste Card para acessar o Matrícula</p>
                       </div>
                     </div>
-
+                  </router-link>
                   </div>
                 </div>
               </div>
