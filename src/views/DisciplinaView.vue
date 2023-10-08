@@ -5,12 +5,9 @@ import axios from 'axios';
 
 const formData = ref({
   nome: '',
-  sobrenome: '',
-  email: '',
-  login: '',
-  senha: '',
-  dataCadastro: new Date().toISOString(), // Data atual em formato ISO
-  ativo: true,
+  valor: '',
+  disponivel: true,
+  ead: true,
 });
 
 axios.interceptors.request.use((config) => {
@@ -18,9 +15,8 @@ axios.interceptors.request.use((config) => {
   return config;
 });
 
-//POST Aluno
 const enviarFormulario = () => {
-  axios.post('https://localhost:7127/api/aluno', formData.value, {
+  axios.post('https://localhost:7127/api/disciplina', formData.value, {
     headers: {
       'Content-Type': 'application/json',
     },
@@ -30,11 +26,9 @@ const enviarFormulario = () => {
 
       // Limpar o formulário
       formData.value.nome = '';
-      formData.value.sobrenome = '';
-      formData.value.email = '';
-      formData.value.login = '';
-      formData.value.senha = '';
-      formData.value.ativo = '';
+      formData.value.valor = '';
+      formData.value.disponivel = true;
+      formData.value.ead = true;
 
       // Exibir o modal de sucesso
       const successModal = new bootstrap.Modal(document.getElementById('successModal'));
@@ -45,93 +39,83 @@ const enviarFormulario = () => {
     });
 };
 
-//GET Aluno
-const alunos = ref([]);
-const searchTerm = ref('');
+//GET Disciplina
+const disciplinas = ref([]);
+const searchDisp = ref('');
 
 onMounted(async () => {
   try {
-    const response = await axios.get('https://localhost:7127/api/aluno');
-    alunos.value = response.data.$values;
+    const response = await axios.get('https://localhost:7127/api/disciplina');
+    disciplinas.value = response.data.$values;
   } catch (error) {
     console.error('Erro na solicitação:', error);
   }
 });
 
 // Filtro
-const filteredAlunos = computed(() => {
-  if (!searchTerm.value) {
-    return alunos.value;
+const filteredDisciplinas = computed(() => {
+  if (!searchDisp.value) {
+    return disciplinas.value;
   }
 
-  const searchId = parseInt(searchTerm.value);
-  return alunos.value.filter(aluno => aluno.$id == searchId);
+  const searchId = parseInt(searchDisp.value);
+  return disciplinas.value.filter(disciplina => disciplina.$id == searchId);
 });
 
-//PUT Aluno
-const selectedUserId = ref(null); // Inicialmente, nenhum aluno está selecionado
+//PUT Disciplina
+const selectedUserId = ref(null); // Inicialmente, nenhuma disciplina está selecionada
 
 // Crie um objeto formDataPUT para o formulário PUT
 const formDataPUT = ref({
   $id: '',
   nome: '',
-  sobrenome: '',
-  email: '',
-  login: '',
-  senha: '',
-  dataCadastro: '',
+  valor: '',
+  disponivel: true,
   ativo: true,
 });
 
 // Atualize o formDataPUT quando selectedUserId mudar
 watch(selectedUserId, (newUserId) => {
   if (newUserId) {
-    // Preencha o formDataPUT com os dados do aluno selecionado
+    // Preencha o formDataPUT com os dados da disciplina selecionada
     formDataPUT.value.$id = newUserId.$id;
     formDataPUT.value.nome = newUserId.nome;
-    formDataPUT.value.sobrenome = newUserId.sobrenome;
-    formDataPUT.value.email = newUserId.email;
-    formDataPUT.value.login = newUserId.login;
-    formDataPUT.value.senha = newUserId.senha;
-    formDataPUT.value.ativo = newUserId.ativo;
+    formDataPUT.value.valor = newUserId.valor;
+    formDataPUT.value.disponivel = newUserId.disponivel;
+    formDataPUT.value.ead = newUserId.ead;
   } else {
-    // Limpe o formDataPUT quando nenhum aluno estiver selecionado
+    // Limpe o formDataPUT quando nenhuma disciplina estiver selecionada
     formDataPUT.value.$id = '';
     formDataPUT.value.nome = '';
-    formDataPUT.value.sobrenome = '';
-    formDataPUT.value.email = '';
-    formDataPUT.value.login = '';
-    formDataPUT.value.senha = '';
-    formDataPUT.value.ativo = true;
+    formDataPUT.value.valor = '';
+    formDataPUT.value.disponivel = true;
+    formDataPUT.value.ead = true;
   }
 });
 
 const enviarFormularioPUT = () => {
-  const alunoId = selectedUserId.value; // Obtém o aluno selecionado
+  const disciplinaId = selectedUserId.value; // Obtém a disciplina selecionada
 
-  if (!alunoId || !alunoId.$id) {
-    console.error('Nenhum aluno selecionado para atualização.');
+  if (!disciplinaId || !disciplinaId.$id) {
+    console.error('Nenhuma disciplina selecionada para atualização.');
     return;
   }
 
-  // Crie um objeto com os dados do aluno para atualização
-  const alunoParaAtualizar = {
-    $id: alunoId.$id,
+  // Crie um objeto com os dados da disciplina para atualização
+  const disciplinaParaAtualizar = {
+    $id: disciplinaId.$id,
     nome: formDataPUT.value.nome,
-    sobrenome: formDataPUT.value.sobrenome,
-    email: formDataPUT.value.email,
-    login: formDataPUT.value.login,
-    senha: formDataPUT.value.senha,
-    dataCadastro: alunoId.dataCadastro, // Defina a dataCadastro com base em alunoId
-    ativo: formDataPUT.value.ativo,
+    valor: formDataPUT.value.valor,
+    disponivel: formDataPUT.value.disponivel,
+    ead: formDataPUT.value.ead,
   };
 
-  // Combine as informações existentes do aluno com as informações do formulário
-  const alunoAtualizado = { ...alunoId, ...alunoParaAtualizar };
+  // Combine as informações existentes da disciplina com as informações do formulário
+  const disciplinaAtualizado = { ...disciplinaId, ...disciplinaParaAtualizar };
 
-  const url = 'https://localhost:7127/api/aluno'; // URL para atualizar o aluno
+  const url = 'https://localhost:7127/api/disciplina'; // URL para atualizar a disciplina
 
-  axios.put(url, alunoAtualizado, {
+  axios.put(url, disciplinaAtualizado, {
     headers: {
       'Content-Type': 'application/json',
     },
@@ -141,17 +125,15 @@ const enviarFormularioPUT = () => {
 
       // Limpar o formulário
       formDataPUT.value.nome = '';
-      formDataPUT.value.sobrenome = '';
-      formDataPUT.value.email = '';
-      formDataPUT.value.login = '';
-      formDataPUT.value.senha = '';
-      formData.value.ativo = true;
+      formDataPUT.value.valor = '';
+      formDataPUT.value.disponivel = true;
+      formData.value.ead = true;
 
       // Exibir o modal de sucesso
       const successModal = new bootstrap.Modal(document.getElementById('successModalPUT'));
       successModal.show();
 
-      // Redefinir o aluno selecionado para vazio após o sucesso
+      // Redefinir a disciplina selecionada para vazio após o sucesso
       selectedUserId.value = null;
 
 
@@ -161,81 +143,71 @@ const enviarFormularioPUT = () => {
     });
 };
 
-// DELETE Aluno
-const selectedDeleteUserId = ref(null); // Inicialmente, nenhum aluno está selecionado
+// DELETE Disciplina
+const selectedDeleteUserId = ref(null); // Inicialmente, nenhuma disciplina está selecionada
 
 // Crie um objeto formDataDELETE para o formulário DELETE
 const formDataDETELE = ref({
   $id: '',
   nome: '',
-  sobrenome: '',
-  email: '',
-  login: '',
-  senha: '',
-  dataCadastro: '',
-  ativo: true,
+  valor: '',
+  disponivel: true,
+  ead: true,
 });
 
 // Atualize o formDataDELETE quando selectedDeleteUserId mudar
 watch(selectedDeleteUserId, (newUserId) => {
   if (newUserId) {
-    // Preencha o formDataDELETE com os dados do aluno selecionado
+    // Preencha o formDataDELETE com os dados da disciplina selecionada
     formDataDETELE.value.$id = newUserId.$id;
     formDataDETELE.value.nome = newUserId.nome;
-    formDataDETELE.value.sobrenome = newUserId.sobrenome;
-    formDataDETELE.value.email = newUserId.email;
-    formDataDETELE.value.login = newUserId.login;
-    formDataDETELE.value.senha = newUserId.senha;
-    formDataDETELE.value.ativo = newUserId.ativo;
+    formDataDETELE.value.valor = newUserId.valor;
+    formDataDETELE.value.disponivel = newUserId.disponivel;
+    formDataDETELE.value.ead = newUserId.ead;
   } else {
-    // Limpe o formDataDELETE quando nenhum aluno estiver selecionado
+    // Limpe o formDataDELETE quando nenhuma disciplina estiver selecionada
     formDataDETELE.value.$id = '';
     formDataDETELE.value.nome = '';
-    formDataDETELE.value.sobrenome = '';
-    formDataDETELE.value.email = '';
-    formDataDETELE.value.login = '';
-    formDataDETELE.value.senha = '';
-    formDataDETELE.value.ativo = true;
+    formDataDETELE.value.valor = '';
+    formDataDETELE.value.disponivel = true;
+    formDataDETELE.value.ead = true;
   }
 });
 const confirmarExclusao = () => {
-  const confirmacao = window.confirm('Tem certeza que deseja apagar este aluno?');
+  const confirmacao = window.confirm('Tem certeza que deseja apagar esta disciplina?');
 
   if (confirmacao) {
-    // Chama a função para apagar o aluno
+    // Chama a função para apagar a disciplina
     enviarFormularioDELETE();
   }
 }
 const enviarFormularioDELETE = () => {
-  const alunoId = selectedDeleteUserId.value; // Obtém o aluno selecionado
+  const disciplinaId = selectedDeleteUserId.value; // Obtém a disciplina selecionada
 
-  if (!alunoId || !alunoId.$id) {
-    console.error('Nenhum aluno selecionado para deletar.');
+  if (!disciplinaId || !disciplinaId.$id) {
+    console.error('Nenhuma disciplina selecionada para deletar.');
     return;
   }
 
-  // Crie um objeto com os dados do aluno para deletar
-  const alunoParaApagar = {
-    $id: alunoId.$id,
+  // Crie um objeto com os dados da disciplina para deletar
+  const disciplinaParaApagar = {
+    $id: disciplinaId.$id,
     nome: formDataDETELE.value.nome,
-    sobrenome: formDataDETELE.value.sobrenome,
-    email: formDataDETELE.value.email,
-    login: formDataDETELE.value.login,
-    senha: formDataDETELE.value.senha,
-    dataCadastro: alunoId.dataCadastro, // Defina a dataCadastro com base em alunoId
-    ativo: formDataDETELE.value.ativo,
+    valor: formDataDETELE.value.valor,
+    disponivel: formDataDETELE.value.disponivel,
+    ead: formDataDETELE.value.ead,
   };
 
-  // Combine as informações existentes do aluno com as informações do formulário
-  const alunoAtualizado = { ...alunoId, ...alunoParaApagar };
+  // Combine as informações existentes da disciplina com as informações do formulário
+  const disciplinaAtualizado = { ...disciplinaId, ...disciplinaParaApagar };
 
 
-  // const alunoJSON = JSON.stringify(alunoParaApagar);
+  // const disciplinaJSON = JSON.stringify(disciplinaParaApagar);
 
-  const url = `https://localhost:7127/api/aluno`; // URL para excluir o aluno com base no ID
+  const url = `https://localhost:7127/api/disciplina`; // URL para excluir a disciplina com base no ID
 
   axios.delete(url, {
-    data: alunoAtualizado,
+    data: disciplinaAtualizado,
     headers: {
       'Content-Type': 'application/json',
     },
@@ -245,17 +217,15 @@ const enviarFormularioDELETE = () => {
 
       // Limpar o formulário
       formDataDETELE.value.nome = '';
-      formDataDETELE.value.sobrenome = '';
-      formDataDETELE.value.email = '';
-      formDataDETELE.value.login = '';
-      formDataDETELE.value.senha = '';
-      formDataDETELE.value.ativo = true;
+      formDataDETELE.value.valor = '';
+      formDataDETELE.value.disponivel = true;
+      formDataDETELE.value.ead = true;
 
       // Exibir o modal de sucesso
       const successModal = new bootstrap.Modal(document.getElementById('successModalDELETE'));
       successModal.show();
 
-      // Redefinir o aluno selecionado para vazio após o sucesso
+      // Redefinir a disciplina selecionada para vazio após o sucesso
       selectedDeleteUserId.value = null;
 
 
@@ -279,7 +249,7 @@ const enviarFormularioDELETE = () => {
           <h2 class="accordion-header">
             <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
               data-bs-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
-              POST Aluno
+              POST Disciplina
             </button>
           </h2>
           <div id="collapseOne" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
@@ -290,25 +260,19 @@ const enviarFormularioDELETE = () => {
                   <input type="text" class="form-control" id="inputFirst" v-model="formData.nome">
                 </div>
                 <div class="col-md-6">
-                  <label for="inputLast" class="form-label">Sobrenome</label>
-                  <input type="text" class="form-control" id="inputLast" v-model="formData.sobrenome">
+                  <label for="inputLast" class="form-label">Valor</label>
+                  <input type="text" class="form-control" id="inputLast" v-model="formData.valor">
                 </div>
-                <div class="col-12">
-                  <label for="inputEmail4" class="form-label">Email</label>
-                  <input type="email" class="form-control" id="inputEmail4" v-model="formData.email">
-                </div>
-                <div class="col-md-6">
-                  <label for="inputLogin4" class="form-label">Login</label>
-                  <input type="text" class="form-control" id="inputLogin4" v-model="formData.login">
-                </div>
-                <div class="col-md-6">
-                  <label for="inputPassword4" class="form-label">Password</label>
-                  <input type="password" class="form-control" id="inputPassword4" v-model="formData.senha">
-                </div>
-                <input type="hidden" id="inputDate" v-model="formData.dataCadastro">
                 <div class="col-md-4">
-                  <label for="inputState" class="form-label">Ativo</label>
-                  <select id="inputState" class="form-select" v-model="formData.ativo">
+                  <label for="inputState" class="form-label">Disponível</label>
+                  <select id="inputState" class="form-select" v-model="formData.disponivel">
+                    <option value="true">Sim</option>
+                    <option value="false">Não</option>
+                  </select>
+                </div>
+                <div class="col-md-4">
+                  <label for="inputState" class="form-label">EAD</label>
+                  <select id="inputState" class="form-select" v-model="formData.ead">
                     <option value="true">Sim</option>
                     <option value="false">Não</option>
                   </select>
@@ -345,14 +309,14 @@ const enviarFormularioDELETE = () => {
           <h2 class="accordion-header">
             <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
               data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
-              GET Aluno
+              GET Disciplina
             </button>
           </h2>
           <div id="collapseTwo" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
             <div class="accordion-body">
 
               <div class="input-group input-group-sm mb-3">
-                <input type="text" class="form-control" v-model="searchTerm" placeholder="Pesquisa por Id" />
+                <input type="text" class="form-control" v-model="searchDisp" placeholder="Pesquisa por Id" />
               </div>
 
               <table class="table">
@@ -360,24 +324,18 @@ const enviarFormularioDELETE = () => {
                   <tr>
                     <th scope="col">#</th>
                     <th scope="col">Nome</th>
-                    <th scope="col">Sobrenome</th>
-                    <th scope="col">E-Mail</th>
-                    <th scope="col">Login</th>
-                    <th scope="col">Senha</th>
-                    <th scope="col">Data de Cadastro</th>
-                    <th scope="col">Ativo</th>
+                    <th scope="col">Valor</th>
+                    <th scope="col">Disponível</th>
+                    <th scope="col">EAD</th>
                   </tr>
                 </thead>
                 <tbody>
-                  <tr v-for="aluno in filteredAlunos" :key="aluno.$id">
-                    <th scope="row">{{ aluno.$id }}</th>
-                    <td>{{ aluno.nome }}</td>
-                    <td>{{ aluno.sobrenome }}</td>
-                    <td>{{ aluno.email }}</td>
-                    <td>{{ aluno.login }}</td>
-                    <td>{{ aluno.senha }}</td>
-                    <td>{{ aluno.dataCadastro }}</td>
-                    <td>{{ aluno.ativo ? 'Sim' : 'Não' }}</td>
+                  <tr v-for="disciplina in filteredDisciplinas" :key="disciplina.$id">
+                    <th scope="row">{{ disciplina.$id }}</th>
+                    <td>{{ disciplina.nome }}</td>
+                    <td>{{ disciplina.valor }}</td>
+                    <td>{{ disciplina.disponivel ? 'Sim' : 'Não' }}</td>
+                    <td>{{ disciplina.ead ? 'Sim' : 'Não' }}</td>
                   </tr>
                 </tbody>
               </table>
@@ -392,7 +350,7 @@ const enviarFormularioDELETE = () => {
           <h2 class="accordion-header">
             <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
               data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
-              PUT Aluno
+              PUT Disciplina
             </button>
           </h2>
           <div id="collapseThree" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
@@ -400,9 +358,9 @@ const enviarFormularioDELETE = () => {
 
               <form class="row" @submit.prevent="enviarFormularioPUT">
                 <div class="col-12">
-                  <label for="inputState" class="form-label">Selecione Aluno</label>
+                  <label for="inputState" class="form-label">Selecione Disciplina</label>
                   <select id="inputState" class="form-select" v-model="selectedUserId">
-                    <option v-for="aluno in filteredAlunos" :key="aluno.$id" :value="aluno">{{ aluno.$id }}</option>
+                    <option v-for="disciplina in filteredDisciplinas" :key="disciplina.$id" :value="disciplina">{{ disciplina.$id }}</option>
                   </select>
                 </div>
                 <div class="col-md-6">
@@ -410,25 +368,19 @@ const enviarFormularioDELETE = () => {
                   <input type="text" class="form-control" id="inputFirst" v-model="formDataPUT.nome">
                 </div>
                 <div class="col-md-6">
-                  <label for="inputLast" class="form-label">Sobrenome</label>
-                  <input type="text" class="form-control" id="inputLast" v-model="formDataPUT.sobrenome">
+                  <label for="inputLast" class="form-label">Valor</label>
+                  <input type="text" class="form-control" id="inputLast" v-model="formDataPUT.valor">
                 </div>
-                <div class="col-12">
-                  <label for="inputEmail4" class="form-label">Email</label>
-                  <input type="email" class="form-control" id="inputEmail4" v-model="formDataPUT.email">
-                </div>
-                <div class="col-md-6">
-                  <label for="inputLogin4" class="form-label">Login</label>
-                  <input type="text" class="form-control" id="inputLogin4" v-model="formDataPUT.login">
-                </div>
-                <div class="col-md-6">
-                  <label for="inputPassword4" class="form-label">Password</label>
-                  <input type="password" class="form-control" id="inputPassword4" v-model="formDataPUT.senha">
-                </div>
-                <input type="hidden" id="inputDate" v-model="formDataPUT.dataCadastro">
                 <div class="col-md-4">
-                  <label for="inputState" class="form-label">Ativo</label>
-                  <select id="inputState" class="form-select" v-model="formDataPUT.ativo">
+                  <label for="inputState" class="form-label">Disponível</label>
+                  <select id="inputState" class="form-select" v-model="formDataPUT.disponivel">
+                    <option value="true">Sim</option>
+                    <option value="false">Não</option>
+                  </select>
+                </div>
+                <div class="col-md-4">
+                  <label for="inputState" class="form-label">EAD</label>
+                  <select id="inputState" class="form-select" v-model="formDataPUT.ead">
                     <option value="true">Sim</option>
                     <option value="false">Não</option>
                   </select>
@@ -468,7 +420,7 @@ const enviarFormularioDELETE = () => {
           <h2 class="accordion-header">
             <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
               data-bs-target="#collapseFour" aria-expanded="false" aria-controls="collapseFour">
-              DELETE Aluno
+              DELETE Disciplina
             </button>
           </h2>
           <div id="collapseFour" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
@@ -476,9 +428,9 @@ const enviarFormularioDELETE = () => {
 
               <form class="row" @submit.prevent="confirmarExclusao">
                 <div class="col-12">
-                  <label for="inputState" class="form-label">Selecione Aluno</label>
+                  <label for="inputState" class="form-label">Selecione Disciplina</label>
                   <select id="inputState" class="form-select" v-model="selectedDeleteUserId">
-                    <option v-for="aluno in filteredAlunos" :key="aluno.$id" :value="aluno">{{ aluno.$id }}</option>
+                    <option v-for="disciplina in filteredDisciplinas" :key="disciplina.$id" :value="disciplina">{{ disciplina.$id }}</option>
                   </select>
                 </div>
                 <div class="col-md-6">
@@ -487,29 +439,20 @@ const enviarFormularioDELETE = () => {
                     disabled="isInputLocked">
                 </div>
                 <div class="col-md-6">
-                  <label for="inputLast" class="form-label">Sobrenome</label>
-                  <input type="text" class="form-control" id="inputLast" v-model="formDataDETELE.sobrenome"
+                  <label for="inputLast" class="form-label">Valor</label>
+                  <input type="text" class="form-control" id="inputLast" v-model="formDataDETELE.valor"
                     disabled="isInputLocked">
                 </div>
-                <div class="col-12">
-                  <label for="inputEmail4" class="form-label">Email</label>
-                  <input type="email" class="form-control" id="inputEmail4" v-model="formDataDETELE.email"
-                    disabled="isInputLocked">
-                </div>
-                <div class="col-md-6">
-                  <label for="inputLogin4" class="form-label">Login</label>
-                  <input type="text" class="form-control" id="inputLogin4" v-model="formDataDETELE.login"
-                    disabled="isInputLocked">
-                </div>
-                <div class="col-md-6">
-                  <label for="inputPassword4" class="form-label">Password</label>
-                  <input type="password" class="form-control" id="inputPassword4" v-model="formDataDETELE.senha"
-                    disabled="isInputLocked">
-                </div>
-                <input type="hidden" id="inputDate" v-model="formDataDETELE.dataCadastro" disabled="isInputLocked">
                 <div class="col-md-4">
-                  <label for="inputState" class="form-label">Ativo</label>
-                  <select id="inputState" class="form-select" v-model="formDataDETELE.ativo" disabled="isInputLocked">
+                  <label for="inputState" class="form-label">Disponível</label>
+                  <select id="inputState" class="form-select" v-model="formDataDETELE.disponivel" disabled="isInputLocked">
+                    <option value="true">Sim</option>
+                    <option value="false">Não</option>
+                  </select>
+                </div>
+                <div class="col-md-4">
+                  <label for="inputState" class="form-label">EAD</label>
+                  <select id="inputState" class="form-select" v-model="formDataDETELE.ead" disabled="isInputLocked">
                     <option value="true">Sim</option>
                     <option value="false">Não</option>
                   </select>

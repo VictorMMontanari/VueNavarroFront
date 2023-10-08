@@ -11,6 +11,7 @@
             <div class="container px-4 text-center">
               <div class="row gx-5">
                 <div class="col-md-4 col-12">
+
                   <div class="p-3">
                     <router-link to="/aluno" class="nav-link">
                       <div class="card text-bg-primary mb-3" style="max-width: 18rem;">
@@ -23,47 +24,52 @@
                     </router-link>
                   </div>
                 </div>
+
                 <div class="col-md-4 col-12">
                   <div class="p-3">
-
-                    <div class="card text-bg-secondary mb-3" style="max-width: 18rem;">
-                      <div class="card-header">Disciplina</div>
-                      <div class="card-body">
-                        <h5 class="card-title">CRUD Disciplina</h5>
-                        <p class="card-text">Clique neste Card para acessar o Disciplina</p>
+                    <router-link to="/disciplina" class="nav-link">
+                      <div class="card text-bg-secondary mb-3" style="max-width: 18rem;">
+                        <div class="card-header">Disciplina</div>
+                        <div class="card-body">
+                          <h5 class="card-title">CRUD Disciplina</h5>
+                          <p class="card-text">Clique neste Card para acessar o Disciplina</p>
+                        </div>
                       </div>
-                    </div>
+                    </router-link>
 
                   </div>
                 </div>
+
                 <div class="col-md-4 col-12">
                   <div class="p-3">
 
                     <div class="card text-bg-success mb-3" style="max-width: 18rem;">
-                      <div class="card-header">Gerente</div>
+                      <div class="card-header">Matrícula</div>
                       <div class="card-body">
-                        <h5 class="card-title">CRUD Gerente</h5>
-                        <p class="card-text">Clique neste Card para acessar o Gerente</p>
+                        <h5 class="card-title">CRUD Matrícula</h5>
+                        <p class="card-text">Clique neste Card para acessar o Matrícula</p>
                       </div>
                     </div>
 
                   </div>
                 </div>
               </div>
+
               <div class="row gx-5">
                 <div class="col-md-4 col-12">
                   <div class="p-3">
 
                     <div class="card text-bg-danger mb-3" style="max-width: 18rem;">
-                      <div class="card-header">Matricula</div>
+                      <div class="card-header">Gerente</div>
                       <div class="card-body">
-                        <h5 class="card-title">Matricula</h5>
-                        <p class="card-text">Clique neste Card para acessar Matricula</p>
+                        <h5 class="card-title">CRUD Gerente</h5>
+                        <p class="card-text">Clique neste Card para acessar Gerente</p>
                       </div>
                     </div>
 
                   </div>
                 </div>
+
                 <div class="col-md-4 col-12">
                   <div class="p-3">
 
@@ -77,6 +83,7 @@
 
                   </div>
                 </div>
+
                 <div class="col-md-4 col-12">
                   <div class="p-3">
 
@@ -87,10 +94,10 @@
                         <p class="card-text">Clique neste Card para acessar ProjetoTI</p>
                       </div>
                     </div>
-
                   </div>
                 </div>
               </div>
+
             </div>
           </div>
         </div>
