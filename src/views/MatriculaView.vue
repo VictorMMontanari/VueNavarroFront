@@ -21,10 +21,10 @@ axios.interceptors.request.use((config) => {
 
 //Post Matricula
 const enviarFormulario = () => {
-  const idAluno = selectedUserIds.value.alunoId.$id;
+  const idAluno = selectedUserIds.value.alunoId.userId;
   const idDisciplina = selectedUserIds.value.disciplinaId.$id;
-  // console.log('idAluno:', idAluno);
-  // console.log('idDisciplina:', idDisciplina);
+  console.log('idAluno:', idAluno);
+  console.log('idDisciplina:', idDisciplina);
 
 
   axios.post(`https://localhost:7127/api/matricula?idAluno=${idAluno}&idDisciplina=${idDisciplina}`, {
@@ -297,7 +297,7 @@ const enviarFormularioDELETE = () => {
                 <div class="col-12">
                   <label for="inputState1" class="form-label">Selecione Id do Aluno</label>
                   <select id="inputState1" class="form-select" v-model="selectedUserIds.alunoId">
-                    <option v-for="aluno in filteredAlunos" :key="aluno.$id" :value="aluno">{{ aluno.$id }}  |  {{ aluno.nome }}</option>
+                    <option v-for="aluno in filteredAlunos" :key="aluno.userId" :value="aluno">{{ aluno.userId }}  |  {{ aluno.nome }}</option>
                   </select>
                 </div>
                 <div class="col-12">

@@ -21,8 +21,8 @@ axios.interceptors.request.use((config) => {
 
 //Post ProjetoTI
 const enviarFormulario = () => {
-  const idGerente = selectedUserIds.value.gerenteId.UserId;
-  const idProgramador = selectedUserIds.value.programadorId;
+  const idGerente = selectedUserIds.value.gerenteId.userId;
+  const idProgramador = selectedUserIds.value.programadorId.userId;
   console.log('idGerente:', idGerente);
   console.log('idProgramador:', idProgramador);
 
@@ -297,13 +297,13 @@ const enviarFormularioDELETE = () => {
                 <div class="col-12">
                   <label for="inputState1" class="form-label">Selecione Id do Gerente</label>
                   <select id="inputState1" class="form-select" v-model="selectedUserIds.gerenteId">
-                    <option v-for="gerente in filteredGerentes" :key="gerente.UserId" :value="gerente">{{ gerente.UserId }}  |  {{ gerente.nome }}</option>
+                    <option v-for="gerente in filteredGerentes" :key="gerente.userId" :value="gerente">{{ gerente.userId }}  |  {{ gerente.nome }}</option>
                   </select>
                 </div>
                 <div class="col-12">
                   <label for="inputState2" class="form-label">Selecione Id do Programador</label>
                   <select id="inputState2" class="form-select" v-model="selectedUserIds.programadorId">
-                    <option v-for="programador in filteredProgramadores" :key="programador.UserId" :value="programador">{{ programador.UserId }}  |  {{ programador.nome }}</option>
+                    <option v-for="programador in filteredProgramadores" :key="programador.userId" :value="programador">{{ programador.userId }}  |  {{ programador.nome }}</option>
                   </select>
                 </div>
 
@@ -358,10 +358,10 @@ const enviarFormularioDELETE = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  <tr v-for="projetoTI in filteredProjetosTI" :key="projetoTI.UserId">
-                    <th scope="row">{{ projetoTI.UserId }}</th>
-                    <td>{{ projetoTI.gerenteId }}</td>
-                    <td>{{ projetoTI.programador }}</td>
+                  <tr v-for="projetoTI in filteredProjetosTI" :key="projetoTI.$id">
+                    <th scope="row">{{ projetoTI.$id }}</th>
+                    <td>{{ projetoTI.gerenteId }} </td>
+                    <td>{{ projetoTI.programadorId }}</td>
                   </tr>
                 </tbody>
               </table>

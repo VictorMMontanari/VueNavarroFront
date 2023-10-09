@@ -387,7 +387,7 @@ const enviarFormularioDELETE = () => {
                 </thead>
                 <tbody>
                   <tr v-for="gerente in filteredGerentes" :key="gerente.$id">
-                    <th scope="row">{{ gerente.$id }}</th>
+                    <th scope="row">{{ gerente.userId }}</th>
                     <td>{{ gerente.nome }}</td>
                     <td>{{ gerente.sobrenome }}</td>
                     <td>{{ gerente.email }}</td>
