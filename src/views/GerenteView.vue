@@ -11,6 +11,7 @@ const formData = ref({
   senha: '',
   dataCadastro: new Date().toISOString(), // Data atual em formato ISO
   ativo: true,
+  cargaHoraria: '',
 });
 
 axios.interceptors.request.use((config) => {
@@ -18,9 +19,9 @@ axios.interceptors.request.use((config) => {
   return config;
 });
 
-//POST Aluno
+//POST Gerente
 const enviarFormulario = () => {
-  axios.post('https://localhost:7127/api/aluno', formData.value, {
+  axios.post('https://localhost:7127/api/gerente', formData.value, {
     headers: {
       'Content-Type': 'application/json',
     },
@@ -35,6 +36,7 @@ const enviarFormulario = () => {
       formData.value.login = '';
       formData.value.senha = '';
       formData.value.ativo = '';
+      formData.value.cargaHoraria = '';
 
       // Exibir o modal de sucesso
       const successModal = new bootstrap.Modal(document.getElementById('successModal'));
@@ -45,31 +47,31 @@ const enviarFormulario = () => {
     });
 };
 
-//GET Aluno
-const alunos = ref([]);
+//GET Gerente
+const gerentes = ref([]);
 const searchTerm = ref('');
 
 onMounted(async () => {
   try {
-    const response = await axios.get('https://localhost:7127/api/aluno');
-    alunos.value = response.data.$values;
+    const response = await axios.get('https://localhost:7127/api/gerente');
+    gerentes.value = response.data.$values;
   } catch (error) {
     console.error('Erro na solicitação:', error);
   }
 });
 
 // Filtro
-const filteredAlunos = computed(() => {
+const filteredGerentes = computed(() => {
   if (!searchTerm.value) {
-    return alunos.value;
+    return gerentes.value;
   }
 
   const searchId = parseInt(searchTerm.value);
-  return alunos.value.filter(aluno => aluno.$id == searchId);
+  return gerentes.value.filter(gerente => gerente.$id == searchId);
 });
 
-//PUT Aluno
-const selectedUserId = ref(null); // Inicialmente, nenhum aluno está selecionado
+//PUT Gerente
+const selectedUserId = ref(null); // Inicialmente, nenhum gerente está selecionado
 
 // Crie um objeto formDataPUT para o formulário PUT
 const formDataPUT = ref({
@@ -81,12 +83,13 @@ const formDataPUT = ref({
   senha: '',
   dataCadastro: '',
   ativo: true,
+  cargaHoraria: '',
 });
 
 // Atualize o formDataPUT quando selectedUserId mudar
 watch(selectedUserId, (newUserId) => {
   if (newUserId) {
-    // Preencha o formDataPUT com os dados do aluno selecionado
+    // Preencha o formDataPUT com os dados do gerente selecionado
     formDataPUT.value.$id = newUserId.$id;
     formDataPUT.value.nome = newUserId.nome;
     formDataPUT.value.sobrenome = newUserId.sobrenome;
@@ -94,8 +97,9 @@ watch(selectedUserId, (newUserId) => {
     formDataPUT.value.login = newUserId.login;
     formDataPUT.value.senha = newUserId.senha;
     formDataPUT.value.ativo = newUserId.ativo;
+    formDataPUT.value.cargaHoraria = newUserId.cargaHoraria;
   } else {
-    // Limpe o formDataPUT quando nenhum aluno estiver selecionado
+    // Limpe o formDataPUT quando nenhum gerente estiver selecionado
     formDataPUT.value.$id = '';
     formDataPUT.value.nome = '';
     formDataPUT.value.sobrenome = '';
@@ -103,35 +107,37 @@ watch(selectedUserId, (newUserId) => {
     formDataPUT.value.login = '';
     formDataPUT.value.senha = '';
     formDataPUT.value.ativo = true;
+    formDataPUT.value.cargaHoraria = '';
   }
 });
 
 const enviarFormularioPUT = () => {
-  const alunoId = selectedUserId.value; // Obtém o aluno selecionado
+  const gerenteId = selectedUserId.value; // Obtém o gerente selecionado
 
-  if (!alunoId || !alunoId.$id) {
-    console.error('Nenhum aluno selecionado para atualização.');
+  if (!gerenteId || !gerenteId.$id) {
+    console.error('Nenhum gerente selecionado para atualização.');
     return;
   }
 
-  // Crie um objeto com os dados do aluno para atualização
-  const alunoParaAtualizar = {
-    $id: alunoId.$id,
+  // Crie um objeto com os dados do gerente para atualização
+  const gerenteParaAtualizar = {
+    $id: gerenteId.$id,
     nome: formDataPUT.value.nome,
     sobrenome: formDataPUT.value.sobrenome,
     email: formDataPUT.value.email,
     login: formDataPUT.value.login,
     senha: formDataPUT.value.senha,
-    dataCadastro: alunoId.dataCadastro, // Defina a dataCadastro com base em alunoId
+    dataCadastro: gerenteId.dataCadastro, // Defina a dataCadastro com base em gerenteId
     ativo: formDataPUT.value.ativo,
+    cargaHoraria: formDataPUT.value.cargaHoraria,
   };
 
-  // Combine as informações existentes do aluno com as informações do formulário
-  const alunoAtualizado = { ...alunoId, ...alunoParaAtualizar };
+  // Combine as informações existentes do gerente com as informações do formulário
+  const gerenteAtualizado = { ...gerenteId, ...gerenteParaAtualizar };
 
-  const url = 'https://localhost:7127/api/aluno'; // URL para atualizar o aluno
+  const url = 'https://localhost:7127/api/gerente'; // URL para atualizar o gerente
 
-  axios.put(url, alunoAtualizado, {
+  axios.put(url, gerenteAtualizado, {
     headers: {
       'Content-Type': 'application/json',
     },
@@ -146,12 +152,13 @@ const enviarFormularioPUT = () => {
       formDataPUT.value.login = '';
       formDataPUT.value.senha = '';
       formDataPUT.value.ativo = true;
+      formDataPUT.value.cargaHoraria = '';
 
       // Exibir o modal de sucesso
       const successModal = new bootstrap.Modal(document.getElementById('successModalPUT'));
       successModal.show();
 
-      // Redefinir o aluno selecionado para vazio após o sucesso
+      // Redefinir o gerente selecionado para vazio após o sucesso
       selectedUserId.value = null;
 
 
@@ -161,8 +168,8 @@ const enviarFormularioPUT = () => {
     });
 };
 
-// DELETE Aluno
-const selectedDeleteUserId = ref(null); // Inicialmente, nenhum aluno está selecionado
+// DELETE Gerente
+const selectedDeleteUserId = ref(null); // Inicialmente, nenhum gerente está selecionado
 
 // Crie um objeto formDataDELETE para o formulário DELETE
 const formDataDETELE = ref({
@@ -174,12 +181,13 @@ const formDataDETELE = ref({
   senha: '',
   dataCadastro: '',
   ativo: true,
+  cargaHoraria: '',
 });
 
 // Atualize o formDataDELETE quando selectedDeleteUserId mudar
 watch(selectedDeleteUserId, (newUserId) => {
   if (newUserId) {
-    // Preencha o formDataDELETE com os dados do aluno selecionado
+    // Preencha o formDataDELETE com os dados do gerente selecionado
     formDataDETELE.value.$id = newUserId.$id;
     formDataDETELE.value.nome = newUserId.nome;
     formDataDETELE.value.sobrenome = newUserId.sobrenome;
@@ -187,8 +195,9 @@ watch(selectedDeleteUserId, (newUserId) => {
     formDataDETELE.value.login = newUserId.login;
     formDataDETELE.value.senha = newUserId.senha;
     formDataDETELE.value.ativo = newUserId.ativo;
+    formDataDETELE.value.cargaHoraria = newUserId.cargaHoraria;
   } else {
-    // Limpe o formDataDELETE quando nenhum aluno estiver selecionado
+    // Limpe o formDataDELETE quando nenhum gerente estiver selecionado
     formDataDETELE.value.$id = '';
     formDataDETELE.value.nome = '';
     formDataDETELE.value.sobrenome = '';
@@ -196,46 +205,48 @@ watch(selectedDeleteUserId, (newUserId) => {
     formDataDETELE.value.login = '';
     formDataDETELE.value.senha = '';
     formDataDETELE.value.ativo = true;
+    formDataDETELE.value.cargaHoraria = '';
   }
 });
 const confirmarExclusao = () => {
-  const confirmacao = window.confirm('Tem certeza que deseja apagar este aluno?');
+  const confirmacao = window.confirm('Tem certeza que deseja apagar este gerente?');
 
   if (confirmacao) {
-    // Chama a função para apagar o aluno
+    // Chama a função para apagar o gerente
     enviarFormularioDELETE();
   }
 }
 const enviarFormularioDELETE = () => {
-  const alunoId = selectedDeleteUserId.value; // Obtém o aluno selecionado
+  const gerenteId = selectedDeleteUserId.value; // Obtém o gerente selecionado
 
-  if (!alunoId || !alunoId.$id) {
-    console.error('Nenhum aluno selecionado para deletar.');
+  if (!gerenteId || !gerenteId.$id) {
+    console.error('Nenhum gerente selecionado para deletar.');
     return;
   }
 
-  // Crie um objeto com os dados do aluno para deletar
-  const alunoParaApagar = {
-    $id: alunoId.$id,
+  // Crie um objeto com os dados do gerente para deletar
+  const gerenteParaApagar = {
+    $id: gerenteId.$id,
     nome: formDataDETELE.value.nome,
     sobrenome: formDataDETELE.value.sobrenome,
     email: formDataDETELE.value.email,
     login: formDataDETELE.value.login,
     senha: formDataDETELE.value.senha,
-    dataCadastro: alunoId.dataCadastro, // Defina a dataCadastro com base em alunoId
+    dataCadastro: gerenteId.dataCadastro, // Defina a dataCadastro com base em gerenteId
     ativo: formDataDETELE.value.ativo,
+    cargaHoraria: formDataDETELE.value.cargaHoraria,
   };
 
-  // Combine as informações existentes do aluno com as informações do formulário
-  const alunoAtualizado = { ...alunoId, ...alunoParaApagar };
+  // Combine as informações existentes do gerente com as informações do formulário
+  const gerenteAtualizado = { ...gerenteId, ...gerenteParaApagar };
 
 
-  // const alunoJSON = JSON.stringify(alunoParaApagar);
+  // const gerenteJSON = JSON.stringify(gerenteParaApagar);
 
-  const url = `https://localhost:7127/api/aluno`; // URL para excluir o aluno com base no ID
+  const url = `https://localhost:7127/api/gerente`; // URL para excluir o gerente com base no ID
 
   axios.delete(url, {
-    data: alunoAtualizado,
+    data: gerenteAtualizado,
     headers: {
       'Content-Type': 'application/json',
     },
@@ -250,12 +261,13 @@ const enviarFormularioDELETE = () => {
       formDataDETELE.value.login = '';
       formDataDETELE.value.senha = '';
       formDataDETELE.value.ativo = true;
+      formDataDETELE.value.cargaHoraria = '';
 
       // Exibir o modal de sucesso
       const successModal = new bootstrap.Modal(document.getElementById('successModalDELETE'));
       successModal.show();
 
-      // Redefinir o aluno selecionado para vazio após o sucesso
+      // Redefinir o gerente selecionado para vazio após o sucesso
       selectedDeleteUserId.value = null;
 
 
@@ -279,7 +291,7 @@ const enviarFormularioDELETE = () => {
           <h2 class="accordion-header">
             <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
               data-bs-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
-              POST Aluno
+              POST Gerente
             </button>
           </h2>
           <div id="collapseOne" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
@@ -313,6 +325,10 @@ const enviarFormularioDELETE = () => {
                     <option value="false">Não</option>
                   </select>
                 </div>
+                <div class="col-md-8">
+                  <label for="inputFirst" class="form-label">Carga Horária</label>
+                  <input type="text" class="form-control" id="inputFirst" v-model="formData.cargaHoraria">
+                </div>
                 <div class="col-12">
                   <br>
                   <button type="submit" class="btn btn-primary">Cadastrar</button>
@@ -345,7 +361,7 @@ const enviarFormularioDELETE = () => {
           <h2 class="accordion-header">
             <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
               data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
-              GET Aluno
+              GET Gerente
             </button>
           </h2>
           <div id="collapseTwo" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
@@ -366,18 +382,20 @@ const enviarFormularioDELETE = () => {
                     <th scope="col">Senha</th>
                     <th scope="col">Data de Cadastro</th>
                     <th scope="col">Ativo</th>
+                    <th scope="col">Carga Horária</th>
                   </tr>
                 </thead>
                 <tbody>
-                  <tr v-for="aluno in filteredAlunos" :key="aluno.$id">
-                    <th scope="row">{{ aluno.$id }}</th>
-                    <td>{{ aluno.nome }}</td>
-                    <td>{{ aluno.sobrenome }}</td>
-                    <td>{{ aluno.email }}</td>
-                    <td>{{ aluno.login }}</td>
-                    <td>{{ aluno.senha }}</td>
-                    <td>{{ aluno.dataCadastro }}</td>
-                    <td>{{ aluno.ativo ? 'Sim' : 'Não' }}</td>
+                  <tr v-for="gerente in filteredGerentes" :key="gerente.$id">
+                    <th scope="row">{{ gerente.$id }}</th>
+                    <td>{{ gerente.nome }}</td>
+                    <td>{{ gerente.sobrenome }}</td>
+                    <td>{{ gerente.email }}</td>
+                    <td>{{ gerente.login }}</td>
+                    <td>{{ gerente.senha }}</td>
+                    <td>{{ gerente.dataCadastro }}</td>
+                    <td>{{ gerente.ativo ? 'Sim' : 'Não' }}</td>
+                    <td>{{ gerente.cargaHoraria }}</td>
                   </tr>
                 </tbody>
               </table>
@@ -392,7 +410,7 @@ const enviarFormularioDELETE = () => {
           <h2 class="accordion-header">
             <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
               data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
-              PUT Aluno
+              PUT Gerente
             </button>
           </h2>
           <div id="collapseThree" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
@@ -400,9 +418,9 @@ const enviarFormularioDELETE = () => {
 
               <form class="row" @submit.prevent="enviarFormularioPUT">
                 <div class="col-12">
-                  <label for="inputState" class="form-label">Selecione Aluno</label>
+                  <label for="inputState" class="form-label">Selecione Gerente</label>
                   <select id="inputState" class="form-select" v-model="selectedUserId">
-                    <option v-for="aluno in filteredAlunos" :key="aluno.$id" :value="aluno">{{ aluno.$id }}</option>
+                    <option v-for="gerente in filteredGerentes" :key="gerente.$id" :value="gerente">{{ gerente.$id }}</option>
                   </select>
                 </div>
                 <div class="col-md-6">
@@ -432,6 +450,10 @@ const enviarFormularioDELETE = () => {
                     <option value="true">Sim</option>
                     <option value="false">Não</option>
                   </select>
+                </div>
+                <div class="col-md-8">
+                  <label for="inputFirst" class="form-label">Carga Horária</label>
+                  <input type="text" class="form-control" id="inputFirst" v-model="formDataPUT.cargaHoraria">
                 </div>
                 <div class="col-12">
                   <br>
@@ -468,7 +490,7 @@ const enviarFormularioDELETE = () => {
           <h2 class="accordion-header">
             <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
               data-bs-target="#collapseFour" aria-expanded="false" aria-controls="collapseFour">
-              DELETE Aluno
+              DELETE Gerente
             </button>
           </h2>
           <div id="collapseFour" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
@@ -476,9 +498,9 @@ const enviarFormularioDELETE = () => {
 
               <form class="row" @submit.prevent="confirmarExclusao">
                 <div class="col-12">
-                  <label for="inputState" class="form-label">Selecione Aluno</label>
+                  <label for="inputState" class="form-label">Selecione Gerente</label>
                   <select id="inputState" class="form-select" v-model="selectedDeleteUserId">
-                    <option v-for="aluno in filteredAlunos" :key="aluno.$id" :value="aluno">{{ aluno.$id }}</option>
+                    <option v-for="gerente in filteredGerentes" :key="gerente.$id" :value="gerente">{{ gerente.$id }}</option>
                   </select>
                 </div>
                 <div class="col-md-6">
@@ -513,6 +535,11 @@ const enviarFormularioDELETE = () => {
                     <option value="true">Sim</option>
                     <option value="false">Não</option>
                   </select>
+                </div>
+                <div class="col-md-6">
+                  <label for="inputFirst" class="form-label">Carga Horária</label>
+                  <input type="text" class="form-control" id="inputFirst" v-model="formDataDETELE.cargaHoraria"
+                    disabled="isInputLocked">
                 </div>
                 <div class="col-12">
                   <br>
