@@ -58,7 +58,7 @@
               <div class="row gx-5">
                 <div class="col-md-4 col-12">
                   <div class="p-3">
-
+                    <router-link to="/gerente" class="nav-link">
                     <div class="card text-bg-danger mb-3" style="max-width: 18rem;">
                       <div class="card-header">Gerente</div>
                       <div class="card-body">
@@ -66,7 +66,7 @@
                         <p class="card-text">Clique neste Card para acessar Gerente</p>
                       </div>
                     </div>
-
+                  </router-link>
                   </div>
                 </div>
 

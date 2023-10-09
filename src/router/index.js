@@ -4,6 +4,8 @@ import AlunoView from '../views/AlunoView.vue'
 import DisciplinaView from '../views/DisciplinaView.vue'
 import MatriculaView from '../views/MatriculaView.vue'
 
+import GerenteView from '../views/GerenteView.vue'
+
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
@@ -26,6 +28,11 @@ const router = createRouter({
       path: '/matricula',
       name: 'matricula',
       component: MatriculaView
+    },
+    {
+      path: '/gerente',
+      name: 'gerente',
+      component: GerenteView
     },
     {
       path: '/about',
