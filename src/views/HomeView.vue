@@ -86,7 +86,7 @@
 
                 <div class="col-md-4 col-12">
                   <div class="p-3">
-
+                    <router-link to="/projetoti" class="nav-link">
                     <div class="card text-bg-info mb-3" style="max-width: 18rem;">
                       <div class="card-header">ProjetoTI</div>
                       <div class="card-body">
@@ -94,6 +94,7 @@
                         <p class="card-text">Clique neste Card para acessar ProjetoTI</p>
                       </div>
                     </div>
+                  </router-link>
                   </div>
                 </div>
               </div>
