@@ -6,6 +6,7 @@ import MatriculaView from '../views/MatriculaView.vue'
 
 import GerenteView from '../views/GerenteView.vue'
 import ProgramadorView from '../views/ProgramadorView.vue'
+import ProjetoTIView from '../views/ProjetoTIView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -39,6 +40,11 @@ const router = createRouter({
       path: '/programador',
       name: 'programador',
       component: ProgramadorView
+    },
+    {
+      path: '/projetoti',
+      name: 'projetoti',
+      component: ProjetoTIView
     },
     {
       path: '/about',
