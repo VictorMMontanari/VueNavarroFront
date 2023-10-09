@@ -72,7 +72,7 @@
 
                 <div class="col-md-4 col-12">
                   <div class="p-3">
-
+                    <router-link to="/programador" class="nav-link">
                     <div class="card text-bg-warning mb-3" style="max-width: 18rem;">
                       <div class="card-header"> Programador </div>
                       <div class="card-body">
@@ -80,7 +80,7 @@
                         <p class="card-text">Clique neste Card para acessar o Programador</p>
                       </div>
                     </div>
-
+                  </router-link>
                   </div>
                 </div>
 
