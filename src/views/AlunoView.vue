@@ -1,10 +1,10 @@
 <script setup>
 import { ref, computed, onMounted, watch, reactive } from 'vue';
 import axios from 'axios';
-import postAluno from '../components/postAluno.vue';
-import getAluno from '../components/getAluno.vue';
-import putAluno from '../components/putAluno.vue';
-import delAluno from '../components/delAluno.vue'
+import postAluno from '../components/aluno/postAluno.vue';
+import getAluno from '../components/aluno/getAluno.vue';
+import putAluno from '../components/aluno/putAluno.vue';
+import delAluno from '../components/aluno/delAluno.vue';
 
 axios.interceptors.request.use((config) => {
   console.log('Dados a serem enviados:', config.data);
@@ -43,7 +43,10 @@ const filteredAlunos = computed(() => {
 
     <div class="container-fluid conteudo2">
       <div class="accordion" id="accordionExample">
+
+        <!-- POST -->
         <postAluno/>
+
         <!-- GET -->
         <div class="accordion-item">
           <h2 class="accordion-header">

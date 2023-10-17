@@ -1,72 +1,62 @@
 <script setup>
 import { ref, computed, onMounted, watch, reactive } from 'vue';
 import axios from 'axios';
-const { alunos } = defineProps(['alunos']);
+const { disciplinas } = defineProps(['disciplinas']);
 
-//PUT Aluno
-const selectedUserId = ref(null); // Inicialmente, nenhum aluno está selecionado
+//PUT Disciplina
+const selectedUserId = ref(null); // Inicialmente, nenhuma disciplina está selecionada
 
 // Crie um objeto formDataPUT para o formulário PUT
 const formDataPUT = ref({
   $id: '',
   nome: '',
-  sobrenome: '',
-  email: '',
-  login: '',
-  senha: '',
-  dataCadastro: '',
+  valor: '',
+  disponivel: true,
   ativo: true,
 });
 
 // Atualize o formDataPUT quando selectedUserId mudar
 watch(selectedUserId, (newUserId) => {
   if (newUserId) {
-    // Preencha o formDataPUT com os dados do aluno selecionado
+    // Preencha o formDataPUT com os dados da disciplina selecionada
     formDataPUT.value.$id = newUserId.$id;
     formDataPUT.value.nome = newUserId.nome;
-    formDataPUT.value.sobrenome = newUserId.sobrenome;
-    formDataPUT.value.email = newUserId.email;
-    formDataPUT.value.login = newUserId.login;
-    formDataPUT.value.senha = newUserId.senha;
-    formDataPUT.value.ativo = newUserId.ativo;
+    formDataPUT.value.valor = newUserId.valor;
+    formDataPUT.value.disponivel = newUserId.disponivel;
+    formDataPUT.value.ead = newUserId.ead;
   } else {
-    // Limpe o formDataPUT quando nenhum aluno estiver selecionado
+    // Limpe o formDataPUT quando nenhuma disciplina estiver selecionada
     formDataPUT.value.$id = '';
     formDataPUT.value.nome = '';
-    formDataPUT.value.sobrenome = '';
-    formDataPUT.value.email = '';
-    formDataPUT.value.login = '';
-    formDataPUT.value.senha = '';
-    formDataPUT.value.ativo = true;
+    formDataPUT.value.valor = '';
+    formDataPUT.value.disponivel = true;
+    formDataPUT.value.ead = true;
   }
 });
 
 const enviarFormularioPUT = () => {
-  const alunoId = selectedUserId.value; // Obtém o aluno selecionado
+  const disciplinaId = selectedUserId.value; // Obtém a disciplina selecionada
 
-  if (!alunoId || !alunoId.$id) {
-    console.error('Nenhum aluno selecionado para atualização.');
+  if (!disciplinaId || !disciplinaId.$id) {
+    console.error('Nenhuma disciplina selecionada para atualização.');
     return;
   }
 
-  // Crie um objeto com os dados do aluno para atualização
-  const alunoParaAtualizar = {
-    $id: alunoId.$id,
+  // Crie um objeto com os dados da disciplina para atualização
+  const disciplinaParaAtualizar = {
+    $id: disciplinaId.$id,
     nome: formDataPUT.value.nome,
-    sobrenome: formDataPUT.value.sobrenome,
-    email: formDataPUT.value.email,
-    login: formDataPUT.value.login,
-    senha: formDataPUT.value.senha,
-    dataCadastro: alunoId.dataCadastro, // Defina a dataCadastro com base em alunoId
-    ativo: formDataPUT.value.ativo,
+    valor: formDataPUT.value.valor,
+    disponivel: formDataPUT.value.disponivel,
+    ead: formDataPUT.value.ead,
   };
 
-  // Combine as informações existentes do aluno com as informações do formulário
-  const alunoAtualizado = { ...alunoId, ...alunoParaAtualizar };
+  // Combine as informações existentes da disciplina com as informações do formulário
+  const disciplinaAtualizado = { ...disciplinaId, ...disciplinaParaAtualizar };
 
-  const url = 'https://localhost:7127/api/aluno'; // URL para atualizar o aluno
+  const url = 'https://localhost:7127/api/disciplina'; // URL para atualizar a disciplina
 
-  axios.put(url, alunoAtualizado, {
+  axios.put(url, disciplinaAtualizado, {
     headers: {
       'Content-Type': 'application/json',
     },
@@ -76,17 +66,15 @@ const enviarFormularioPUT = () => {
 
       // Limpar o formulário
       formDataPUT.value.nome = '';
-      formDataPUT.value.sobrenome = '';
-      formDataPUT.value.email = '';
-      formDataPUT.value.login = '';
-      formDataPUT.value.senha = '';
-      formDataPUT.value.ativo = true;
+      formDataPUT.value.valor = '';
+      formDataPUT.value.disponivel = true;
+      formDataPUT.value.ead = true;
 
       // Exibir o modal de sucesso
       const successModal = new bootstrap.Modal(document.getElementById('successModalPUT'));
       successModal.show();
 
-      // Redefinir o aluno selecionado para vazio após o sucesso
+      // Redefinir a disciplina selecionada para vazio após o sucesso
       selectedUserId.value = null;
 
 
@@ -98,11 +86,11 @@ const enviarFormularioPUT = () => {
 </script>
 
 <template>
-    <div class="accordion-item">
+  <div class="accordion-item">
           <h2 class="accordion-header">
             <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
               data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
-              PUT Aluno
+              PUT Disciplina
             </button>
           </h2>
           <div id="collapseThree" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
@@ -110,9 +98,9 @@ const enviarFormularioPUT = () => {
 
               <form class="row" @submit.prevent="enviarFormularioPUT">
                 <div class="col-12">
-                  <label for="inputState" class="form-label">Selecione Aluno</label>
+                  <label for="inputState" class="form-label">Selecione Disciplina</label>
                   <select id="inputState" class="form-select" v-model="selectedUserId">
-                    <option v-for="aluno in alunos" :key="aluno.$id" :value="aluno">{{ aluno.$id }}</option>
+                    <option v-for="disciplina in disciplinas" :key="disciplina.$id" :value="disciplina">{{ disciplina.$id }} | {{ disciplina.nome }}</option>
                   </select>
                 </div>
                 <div class="col-md-6">
@@ -120,25 +108,19 @@ const enviarFormularioPUT = () => {
                   <input type="text" class="form-control" id="inputFirst" v-model="formDataPUT.nome">
                 </div>
                 <div class="col-md-6">
-                  <label for="inputLast" class="form-label">Sobrenome</label>
-                  <input type="text" class="form-control" id="inputLast" v-model="formDataPUT.sobrenome">
+                  <label for="inputLast" class="form-label">Valor</label>
+                  <input type="text" class="form-control" id="inputLast" v-model="formDataPUT.valor">
                 </div>
-                <div class="col-12">
-                  <label for="inputEmail4" class="form-label">Email</label>
-                  <input type="email" class="form-control" id="inputEmail4" v-model="formDataPUT.email">
-                </div>
-                <div class="col-md-6">
-                  <label for="inputLogin4" class="form-label">Login</label>
-                  <input type="text" class="form-control" id="inputLogin4" v-model="formDataPUT.login">
-                </div>
-                <div class="col-md-6">
-                  <label for="inputPassword4" class="form-label">Password</label>
-                  <input type="password" class="form-control" id="inputPassword4" v-model="formDataPUT.senha">
-                </div>
-                <input type="hidden" id="inputDate" v-model="formDataPUT.dataCadastro">
                 <div class="col-md-4">
-                  <label for="inputState" class="form-label">Ativo</label>
-                  <select id="inputState" class="form-select" v-model="formDataPUT.ativo">
+                  <label for="inputState" class="form-label">Disponível</label>
+                  <select id="inputState" class="form-select" v-model="formDataPUT.disponivel">
+                    <option value="true">Sim</option>
+                    <option value="false">Não</option>
+                  </select>
+                </div>
+                <div class="col-md-4">
+                  <label for="inputState" class="form-label">EAD</label>
+                  <select id="inputState" class="form-select" v-model="formDataPUT.ead">
                     <option value="true">Sim</option>
                     <option value="false">Não</option>
                   </select>

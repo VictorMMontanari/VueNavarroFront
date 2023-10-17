@@ -124,7 +124,7 @@ const enviarFormularioDELETE = () => {
             <div class="col-12">
                 <label for="inputState" class="form-label">Selecione Aluno</label>
                 <select id="inputState" class="form-select" v-model="selectedDeleteUserId">
-                <option v-for="aluno in alunos" :key="aluno.$id" :value="aluno">{{ aluno.$id }}</option>
+                <option v-for="aluno in alunos" :key="aluno.$id" :value="aluno">{{ aluno.$id }} | {{ aluno.nome }}</option>
                 </select>
             </div>
             <div class="col-md-6">
