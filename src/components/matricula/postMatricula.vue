@@ -22,7 +22,7 @@ axios.interceptors.request.use((config) => {
 //Post Matricula
 const enviarFormulario = () => {
   const idAluno = selectedUserIds.value.alunoId.userId;
-  const idDisciplina = selectedUserIds.value.disciplinaId.$id;
+  const idDisciplina = selectedUserIds.value.disciplinaId.disciplinaId;
   console.log('idAluno:', idAluno);
   console.log('idDisciplina:', idDisciplina);
 
@@ -70,7 +70,7 @@ const enviarFormulario = () => {
                 <div class="col-12">
                   <label for="inputState2" class="form-label">Selecione Id da Disciplina</label>
                   <select id="inputState2" class="form-select" v-model="selectedUserIds.disciplinaId">
-                    <option v-for="disciplina in disciplinas" :key="disciplina.userId" :value="disciplina">{{ disciplina.userId }}  |  {{ disciplina.nome }}</option>
+                    <option v-for="disciplina in disciplinas" :key="disciplina.userId" :value="disciplina">{{ disciplina.disciplinaId }}  |  {{ disciplina.nome }}</option>
                   </select>
                 </div>
 
