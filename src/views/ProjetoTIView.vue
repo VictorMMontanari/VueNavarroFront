@@ -93,7 +93,7 @@ const filteredProgramadores = computed(() => {
             </button>
           </h2>
           <div id="collapseTwo" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
-            <div class="accordion-body">
+            <div class="accordion-body" style="overflow-x:auto;">
 
               <div class="input-group input-group-sm mb-3">
                 <input type="text" class="form-control" v-model="searchProg" placeholder="Pesquisa por Id" />
