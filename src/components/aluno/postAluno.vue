@@ -81,8 +81,8 @@ const enviarFormulario = () => {
                     <div class="col-md-4">
                         <label for="inputState" class="form-label">Ativo</label>
                         <select id="inputState" class="form-select" v-model="formData.ativo">
-                            <option value="true">Sim</option>
-                            <option value="false">Não</option>
+                            <option :value="true">Sim</option>
+                            <option :value="false">Não</option>
                         </select>
                     </div>
                     <div class="col-12">
