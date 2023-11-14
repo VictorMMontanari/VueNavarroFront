@@ -72,11 +72,33 @@ const filteredProgramadores = computed(() => {
   const searchIdProgramador = parseInt(searchProg.value);
   return programadores.value.filter(programador => programador.userId == searchIdProgramador);
 });
+
+function procurarGerente(gerenteId){
+  const formGerente = this.gerentes.find(gerente => gerente.userId == gerenteId);
+  // console.log('Gerente Nome-> ', formGerente.nome);
+  return formGerente.nome;
+}
+
+function procurarProgramador(programadorId){
+  const formProgramador = this.programadores.find(programador => programador.userId == programadorId);
+  // console.log('Gerente Nome-> ', formProgramador.nome);
+  return formProgramador.nome;
+}
 </script>
 
 <template>
   <main class="principal">
 
+    <div class="p-3" style="display: flex; justify-content: center;">
+      <div class="nav-link">
+        <div class="card text-bg-info mb-3" style="max-width: 18rem;">
+          <div class="card-header">ProjetoTI</div>
+          <div class="card-body">
+            <h5 class="card-title">CRUD ProjetoTI</h5>
+          </div>
+        </div>
+      </div>
+    </div>
 
     <div class="container-fluid conteudo2">
       <div class="accordion" id="accordionExample">
@@ -103,15 +125,15 @@ const filteredProgramadores = computed(() => {
                 <thead>
                   <tr>
                     <th scope="col">#</th>
-                    <th scope="col">Gerente Id</th>
-                    <th scope="col">Programador Id</th>
+                    <th scope="col">Gerente</th>
+                    <th scope="col">Programador</th>
                   </tr>
                 </thead>
                   <getProjetoTI v-for="projetoTI in filteredProjetosTI"
                   :key="projetoTI.projetoId"
                   :userId="projetoTI.projetoId"
-                  :gerenteId="projetoTI.gerenteId"
-                  :programadorId="projetoTI.programadorId"/>
+                  :gerenteNome="procurarGerente(projetoTI.gerenteId)"
+                  :programadorNome="procurarProgramador(projetoTI.programadorId)"/>
               </table>
 
             </div>

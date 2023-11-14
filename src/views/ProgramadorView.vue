@@ -39,6 +39,16 @@ const filteredProgramadores = computed(() => {
 <template>
   <main class="principal">
 
+    <div class="p-3" style="display: flex; justify-content: center;">
+      <div class="nav-link">
+        <div class="card text-bg-warning mb-3" style="max-width: 18rem;">
+          <div class="card-header">Programador</div>
+          <div class="card-body">
+            <h5 class="card-title">CRUD Programador</h5>
+          </div>
+        </div>
+      </div>
+    </div>
 
     <div class="container-fluid conteudo2">
       <div class="accordion" id="accordionExample">
