@@ -33,6 +33,16 @@ const filteredDisciplinas = computed(() => {
 <template>
   <main class="principal">
 
+    <div class="p-3" style="display: flex; justify-content: center;">
+      <div class="nav-link">
+        <div class="card text-bg-secondary mb-3" style="max-width: 18rem;">
+          <div class="card-header">Disciplina</div>
+          <div class="card-body">
+            <h5 class="card-title">CRUD Disciplina</h5>
+          </div>
+        </div>
+      </div>
+    </div>
 
     <div class="container-fluid conteudo2">
       <div class="accordion" id="accordionExample">

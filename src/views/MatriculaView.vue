@@ -73,11 +73,30 @@ const filteredDisciplinas = computed(() => {
   return disciplinas.value.filter(disciplina => disciplina.userId == searchIdDisciplina);
 });
 
+function procurarAluno(alunoId){
+  const formAluno = this.alunos.find(aluno => aluno.userId == alunoId);
+  return formAluno.nome;
+}
+
+function procurarDisciplina(disciplinaId){
+  const formDisciplina = this.disciplinas.find(disciplina => disciplina.disciplinaId == disciplinaId);
+  return formDisciplina.nome;
+}
 </script>
 
 <template>
   <main class="principal">
 
+    <div class="p-3" style="display: flex; justify-content: center;">
+      <div class="nav-link">
+        <div class="card text-bg-success mb-3" style="max-width: 18rem;">
+          <div class="card-header">Matrícula</div>
+          <div class="card-body">
+            <h5 class="card-title">CRUD Matrícula</h5>
+          </div>
+        </div>
+      </div>
+    </div>
 
     <div class="container-fluid conteudo2">
       <div class="accordion" id="accordionExample">
@@ -105,15 +124,15 @@ const filteredDisciplinas = computed(() => {
                 <thead>
                   <tr>
                     <th scope="col">#</th>
-                    <th scope="col">Aluno Id</th>
-                    <th scope="col">Disciplina Id</th>
+                    <th scope="col">Aluno</th>
+                    <th scope="col">Disciplina</th>
                   </tr>
                 </thead>
                 <getMatricula v-for="matricula in filteredMatriculas"
                   :key="matricula.matriculaId"
                   :userId="matricula.matriculaId"
-                  :alunoId="matricula.alunoId"
-                  :disciplinaId="matricula.disciplinaId"/>
+                  :alunoNome="procurarAluno(matricula.alunoId)"
+                  :disciplinaNome="procurarDisciplina(matricula.disciplinaId)"/>
               </table>
 
             </div>

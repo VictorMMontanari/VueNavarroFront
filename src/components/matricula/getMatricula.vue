@@ -1,13 +1,13 @@
 <script setup>
-const props = defineProps(["userId", "alunoId", "disciplinaId"]);
+const props = defineProps(["userId", "alunoNome", "disciplinaNome"]);
 </script>
 
 <template>
         <tbody>
             <tr>
                 <th scope="row">{{ userId }}</th>
-                <td>{{ alunoId }}</td>
-                <td>{{ disciplinaId }}</td>
+                <td>{{ alunoNome }}</td>
+                <td>{{ disciplinaNome }}</td>
             </tr>
         </tbody>
 </template>

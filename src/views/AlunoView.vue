@@ -40,12 +40,22 @@ const filteredAlunos = computed(() => {
 <template>
   <main class="principal">
 
+    <div class="p-3" style="display: flex; justify-content: center;">
+      <div class="nav-link">
+        <div class="card text-bg-primary mb-3" style="max-width: 18rem;">
+          <div class="card-header">Aluno</div>
+          <div class="card-body">
+            <h5 class="card-title">CRUD Aluno</h5>
+          </div>
+        </div>
+      </div>
+    </div>
 
     <div class="container-fluid conteudo2">
       <div class="accordion" id="accordionExample">
 
         <!-- POST -->
-        <postAluno/>
+        <postAluno />
 
         <!-- GET -->
         <div class="accordion-item">
@@ -64,37 +74,30 @@ const filteredAlunos = computed(() => {
 
               <table class="table">
                 <thead>
-                    <tr>
-                        <th scope="col">#</th>
-                        <th scope="col">Nome</th>
-                        <th scope="col">Sobrenome</th>
-                        <th scope="col">E-Mail</th>
-                        <th scope="col">Login</th>
-                        <th scope="col">Senha</th>
-                        <th scope="col">Data de Cadastro</th>
-                        <th scope="col">Ativo</th>
-                    </tr>
+                  <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Nome</th>
+                    <th scope="col">Sobrenome</th>
+                    <th scope="col">E-Mail</th>
+                    <th scope="col">Login</th>
+                    <th scope="col">Senha</th>
+                    <th scope="col">Data de Cadastro</th>
+                    <th scope="col">Ativo</th>
+                  </tr>
                 </thead>
-                <getAluno v-for="aluno in filteredAlunos"
-                  :key="aluno.userId"
-                  :userId="aluno.userId"
-                  :nome="aluno.nome"
-                  :sobrenome="aluno.sobrenome"
-                  :email="aluno.email"
-                  :login="aluno.login"
-                  :senha="aluno.senha"
-                  :dataCadastro="aluno.dataCadastro"
-                  :ativo="aluno.ativo"/>
+                <getAluno v-for="aluno in filteredAlunos" :key="aluno.userId" :userId="aluno.userId" :nome="aluno.nome"
+                  :sobrenome="aluno.sobrenome" :email="aluno.email" :login="aluno.login" :senha="aluno.senha"
+                  :dataCadastro="aluno.dataCadastro" :ativo="aluno.ativo" />
               </table>
             </div>
           </div>
         </div>
 
         <!-- PUT -->
-        <putAluno :alunos="alunos"/>
+        <putAluno :alunos="alunos" />
 
         <!-- DELETE -->
-        <delAluno :alunos="alunos"/>
+        <delAluno :alunos="alunos" />
 
       </div>
     </div>
