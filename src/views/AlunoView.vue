@@ -4,27 +4,30 @@ import axios from 'axios';
 import postAluno from '../components/aluno/postAluno.vue';
 import getAluno from '../components/aluno/getAluno.vue';
 import putAluno from '../components/aluno/putAluno.vue';
-import delAluno from '../components/aluno/delAluno.vue';
+import delAluno from '../components/aluno/delaluno.vue';
+import RefreshButton  from '../components/RefreshButton .vue';
 
 axios.interceptors.request.use((config) => {
   console.log('Dados a serem enviados:', config.data);
   return config;
 });
 
-// GET Aluno
 const alunos = ref([]);
 const searchTerm = ref('');
 
-onMounted(async () => {
+const fetchData = async () => {
   try {
     const response = await axios.get('https://localhost:7127/api/aluno');
     alunos.value = response.data.$values;
   } catch (error) {
     console.error('Erro na solicitação:', error);
   }
+};
+
+onMounted(() => {
+  fetchData();
 });
 
-// Filtro
 const filteredAlunos = computed(() => {
   if (!searchTerm.value) {
     return alunos.value;
@@ -32,26 +35,22 @@ const filteredAlunos = computed(() => {
   const searchId = parseInt(searchTerm.value);
   return alunos.value.filter(aluno => aluno.userId === searchId);
 });
-// <<<>>> //
 
+const handleRefresh = () => {
+  fetchData();
+};
 
 </script>
 
 <template>
   <main class="principal">
 
-    <div class="p-3" style="display: flex; justify-content: center;">
-      <div class="nav-link">
-        <div class="card text-bg-primary mb-3" style="max-width: 18rem;">
-          <div class="card-header">Aluno</div>
-          <div class="card-body">
-            <h5 class="card-title">CRUD Aluno</h5>
-          </div>
+    <div class="container-fluid conteudo2 text-bg-primary">
+      <div class="mb-3" style="max-width: 18rem;">
+        <div class="card-body">
+            <h5 class="card-title">CRUD Aluno</h5>  
         </div>
       </div>
-    </div>
-
-    <div class="container-fluid conteudo2">
       <div class="accordion" id="accordionExample">
 
         <!-- POST -->
@@ -100,6 +99,7 @@ const filteredAlunos = computed(() => {
         <delAluno :alunos="alunos" />
 
       </div>
+      <RefreshButton @refresh="handleRefresh"/>
     </div>
   </main>
 </template>

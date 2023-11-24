@@ -4,19 +4,24 @@ import axios from 'axios';
 import postDisciplina from '../components/disciplina/postDisciplina.vue';
 import getDisciplina from '../components/disciplina/getDisciplina.vue';
 import putDisciplina from '../components/disciplina/putDisciplina.vue';
-import delDisciplina from '../components/disciplina/delDisciplina.vue'
+import delDisciplina from '../components/disciplina/delDisciplina.vue';
+import RefreshButton  from '../components/RefreshButton .vue';
 
 //GET Disciplina
 const disciplinas = ref([]);
 const searchDisp = ref('');
 
-onMounted(async () => {
+const fetchData = async () => {
   try {
     const response = await axios.get('https://localhost:7127/api/disciplina');
     disciplinas.value = response.data.$values;
   } catch (error) {
     console.error('Erro na solicitação:', error);
   }
+};
+
+onMounted(() => {
+  fetchData();
 });
 
 // Filtro
@@ -28,31 +33,30 @@ const filteredDisciplinas = computed(() => {
   const searchId = parseInt(searchDisp.value);
   return disciplinas.value.filter(disciplina => disciplina.$id == searchId);
 });
+
+const handleRefresh = () => {
+  fetchData();
+};
+
 </script>
 
 <template>
   <main class="principal">
 
-    <div class="p-3" style="display: flex; justify-content: center;">
-      <div class="nav-link">
-        <div class="card text-bg-secondary mb-3" style="max-width: 18rem;">
-          <div class="card-header">Disciplina</div>
+    <div class="container-fluid conteudo2 text-bg-secondary">
+      <div class="mb-3" style="max-width: 18rem;">
           <div class="card-body">
             <h5 class="card-title">CRUD Disciplina</h5>
           </div>
         </div>
-      </div>
-    </div>
-
-    <div class="container-fluid conteudo2">
-      <div class="accordion" id="accordionExample">
+      <div class="accordion " id="accordionExample">
 
         <!-- POST -->
         <postDisciplina/>
         
 
         <!-- GET -->
-        <div class="accordion-item">
+        <div class="accordion-item ">
           <h2 class="accordion-header">
             <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
               data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
@@ -99,6 +103,7 @@ const filteredDisciplinas = computed(() => {
 
 
       </div>
+      <RefreshButton  @refresh="handleRefresh"/>
     </div>
   </main>
 </template>

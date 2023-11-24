@@ -3,18 +3,23 @@ import { ref, computed, onMounted, watch } from 'vue';
 import axios from 'axios';
 import postMatricula from '../components/matricula/postMatricula.vue';
 import getMatricula from '../components/matricula/getMatricula.vue';
+import RefreshButton  from '../components/RefreshButton .vue';
 
 //GET Matricula
 const matriculas = ref([]);
 const searchMat = ref('');
 
-onMounted(async () => {
+const fetchData = async () => {
   try {
     const response = await axios.get('https://localhost:7127/api/matricula');
     matriculas.value = response.data.$values;
   } catch (error) {
     console.error('Erro na solicitação:', error);
   }
+};
+
+onMounted(() => {
+  fetchData();
 });
 
 // Filtro Matricula
@@ -82,23 +87,21 @@ function procurarDisciplina(disciplinaId){
   const formDisciplina = this.disciplinas.find(disciplina => disciplina.disciplinaId == disciplinaId);
   return formDisciplina.nome;
 }
+
+const handleRefresh = () => {
+  fetchData();
+};
 </script>
 
 <template>
   <main class="principal">
 
-    <div class="p-3" style="display: flex; justify-content: center;">
-      <div class="nav-link">
-        <div class="card text-bg-success mb-3" style="max-width: 18rem;">
-          <div class="card-header">Matrícula</div>
+    <div class="container-fluid conteudo2 text-bg-success">
+      <div class="mb-3" style="max-width: 18rem;">
           <div class="card-body">
             <h5 class="card-title">CRUD Matrícula</h5>
           </div>
         </div>
-      </div>
-    </div>
-
-    <div class="container-fluid conteudo2">
       <div class="accordion" id="accordionExample">
 
         <!-- POST -->
@@ -138,8 +141,8 @@ function procurarDisciplina(disciplinaId){
             </div>
           </div>
         </div>
-
       </div>
+      <RefreshButton  @refresh="handleRefresh"/>
     </div>
   </main>
 </template>

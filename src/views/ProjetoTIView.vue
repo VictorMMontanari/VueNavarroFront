@@ -3,18 +3,23 @@ import { ref, computed, onMounted, watch } from 'vue';
 import axios from 'axios';
 import postProjetoTI from '../components/projetoTI/postProjetoTI.vue';
 import getProjetoTI from '../components/projetoTI/getProjetoTI.vue';
+import RefreshButton  from '../components/RefreshButton .vue';
 
 //GET ProjetoTI
 const projetosTI = ref([]);
 const searchMat = ref('');
 
-onMounted(async () => {
+const fetchData = async () => {
   try {
     const response = await axios.get('https://localhost:7127/api/projetoti');
     projetosTI.value = response.data.$values;
   } catch (error) {
     console.error('Erro na solicitação:', error);
   }
+};
+
+onMounted(() => {
+  fetchData();
 });
 
 // Filtro ProjetoTI
@@ -84,23 +89,21 @@ function procurarProgramador(programadorId){
   // console.log('Gerente Nome-> ', formProgramador.nome);
   return formProgramador.nome;
 }
+
+const handleRefresh = () => {
+  fetchData();
+};
 </script>
 
 <template>
   <main class="principal">
 
-    <div class="p-3" style="display: flex; justify-content: center;">
-      <div class="nav-link">
-        <div class="card text-bg-info mb-3" style="max-width: 18rem;">
-          <div class="card-header">ProjetoTI</div>
+    <div class="container-fluid conteudo2 text-bg-info">
+      <div class="mb-3" style="max-width: 18rem;">
           <div class="card-body">
             <h5 class="card-title">CRUD ProjetoTI</h5>
           </div>
         </div>
-      </div>
-    </div>
-
-    <div class="container-fluid conteudo2">
       <div class="accordion" id="accordionExample">
 
         <!-- POST -->
@@ -139,8 +142,8 @@ function procurarProgramador(programadorId){
             </div>
           </div>
         </div>
-
       </div>
+      <RefreshButton  @refresh="handleRefresh"/>
     </div>
   </main>
 </template>
