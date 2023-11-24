@@ -3,9 +3,10 @@ import { ref, computed, onMounted, watch } from 'vue';
 import { useRouter } from 'vue-router';
 import axios from 'axios';
 import postProgramador from '../components/programador/postProgramador.vue';
-import getProgramador from '../components/programador/getProgramador.vue';
+import getProgramadorGerente from '../components/programador/getProgramadorGerente.vue';
 import putProgramador from '../components/programador/putProgramador.vue';
 import delProgramador from '../components/programador/delProgramador.vue';
+import RefreshButton  from '../components/RefreshButton .vue';
 
 axios.interceptors.request.use((config) => {
   console.log('Dados a serem enviados:', config.data);
@@ -16,13 +17,17 @@ axios.interceptors.request.use((config) => {
 const programadores = ref([]);
 const searchTerm = ref('');
 
-onMounted(async () => {
+const fetchData = async () => {
   try {
     const response = await axios.get('https://localhost:7127/api/programador');
     programadores.value = response.data.$values;
   } catch (error) {
     console.error('Erro na solicitação:', error);
   }
+};
+
+onMounted(() => {
+  fetchData();
 });
 
 // Filtro
@@ -34,23 +39,21 @@ const filteredProgramadores = computed(() => {
   const searchId = parseInt(searchTerm.value);
   return programadores.value.filter(programador => programador.userId == searchId);
 });
+
+const handleRefresh = () => {
+  fetchData();
+};
 </script>
 
 <template>
   <main class="principal">
 
-    <div class="p-3" style="display: flex; justify-content: center;">
-      <div class="nav-link">
-        <div class="card text-bg-warning mb-3" style="max-width: 18rem;">
-          <div class="card-header">Programador</div>
+    <div class="container-fluid conteudo2 text-bg-warning">
+      <div class="mb-3" style="max-width: 18rem;">
           <div class="card-body">
             <h5 class="card-title">CRUD Programador</h5>
           </div>
         </div>
-      </div>
-    </div>
-
-    <div class="container-fluid conteudo2">
       <div class="accordion" id="accordionExample">
 
         <!-- POST -->
@@ -85,7 +88,7 @@ const filteredProgramadores = computed(() => {
                     <th scope="col">Nível de Atuação</th>
                   </tr>
                 </thead>
-                <getProgramador v-for="programador in filteredProgramadores"
+                <getProgramadorGerente v-for="programador in filteredProgramadores"
                   :key="programador.userId"
                   :userId="programador.userId"
                   :nome="programador.nome"
@@ -109,6 +112,7 @@ const filteredProgramadores = computed(() => {
         <delProgramador :programadores="programadores"/>
 
       </div>
+      <RefreshButton  @refresh="handleRefresh"/>
     </div>
   </main>
 </template>

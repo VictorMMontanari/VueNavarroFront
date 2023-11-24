@@ -3,9 +3,10 @@ import { ref, computed, onMounted, watch } from 'vue';
 import { useRouter } from 'vue-router';
 import axios from 'axios';
 import postGerente from '../components/gerente/postGerente.vue';
-import getGerente from '../components/gerente/getGerente.vue';
+import getProgramadorGerente from '../components/programador/getProgramadorGerente.vue';
 import putGerente from '../components/gerente/putGerente.vue';
-import delGerente from '../components/gerente/delGerente.vue'
+import delGerente from '../components/gerente/delGerente.vue';
+import RefreshButton  from '../components/RefreshButton .vue';
 
 axios.interceptors.request.use((config) => {
   console.log('Dados a serem enviados:', config.data);
@@ -16,13 +17,17 @@ axios.interceptors.request.use((config) => {
 const gerentes = ref([]);
 const searchTerm = ref('');
 
-onMounted(async () => {
+const fetchData = async () => {
   try {
     const response = await axios.get('https://localhost:7127/api/gerente');
     gerentes.value = response.data.$values;
   } catch (error) {
     console.error('Erro na solicitação:', error);
   }
+};
+
+onMounted(() => {
+  fetchData();
 });
 
 // Filtro
@@ -34,23 +39,22 @@ const filteredGerentes = computed(() => {
   const searchId = parseInt(searchTerm.value);
   return gerentes.value.filter(gerente => gerente.userId == searchId);
 });
+
+const handleRefresh = () => {
+  fetchData();
+};
+
 </script>
 
 <template>
   <main class="principal">
 
-    <div class="p-3" style="display: flex; justify-content: center;">
-      <div class="nav-link">
-        <div class="card text-bg-danger mb-3" style="max-width: 18rem;">
-          <div class="card-header">Gerente</div>
+    <div class="container-fluid conteudo2 text-bg-danger">
+      <div class="mb-3" style="max-width: 18rem;">
           <div class="card-body">
             <h5 class="card-title">CRUD Gerente</h5>
           </div>
         </div>
-      </div>
-    </div>
-
-    <div class="container-fluid conteudo2">
       <div class="accordion" id="accordionExample">
 
         <!-- POST -->
@@ -86,7 +90,7 @@ const filteredGerentes = computed(() => {
                     <th scope="col">Carga Horária</th>
                   </tr>
                 </thead>
-                <getGerente v-for="gerente in filteredGerentes"
+                <getProgramadorGerente v-for="gerente in filteredGerentes"
                   :key="gerente.userId"
                   :userId="gerente.userId"
                   :nome="gerente.nome"
@@ -113,6 +117,7 @@ const filteredGerentes = computed(() => {
 
 
       </div>
+      <RefreshButton  @refresh="handleRefresh"/>
     </div>
   </main>
 </template>
