@@ -17,7 +17,7 @@ Aluno: Heitor Shoiji Kimura RA 193254-6 <br>
 
 Clique na imagem acima para assistir ao vídeo demonstrativo.
 
-## Imagem de Exemplo:
+## Imagens de Exemplo:
 
 ### Home
 ![Home](/public/Home.PNG)
